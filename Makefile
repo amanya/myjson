@@ -9,10 +9,10 @@ clean:
 	rm -f bin/*
 
 $(TARGET): $(OBJ)
-	cc -O0 -g -o $@ $?
+	cc -O0 -g3 -o $@ $?
 
 obj/%.o : src/%.c
-	cc -O0 -g -c $< -o $@ -Iinclude
+	cc -O0 -g3 -c $< -o $@ -Iinclude
 
 test:
 	$(TARGET) array_example.json

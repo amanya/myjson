@@ -62,8 +62,10 @@ TokenItem *add_token(TokenArray *tokens, TokenType tt, char *buf, size_t start, 
     TokenItem *ti = &tokens->items[tokens->count];
     ti->type = tt;
     size_t length = cur - start;
-    ti->value = malloc(length + 1);
-    strncpy(ti->value, buf, length + 1);
+    if (length > 0) {
+        ti->value = malloc(length + 1);
+        memcpy(ti->value, &buf[cur], length);
+    }
     return ti;
 }
 
@@ -87,6 +89,7 @@ int raw_file_scan(RawFile *raw_file, TokenArray *tokens) {
                 }
                 add_token(tokens, TT_STRING, raw_file->buf, start, c);
                 break;
+            /*
             case '0':
             case '1':
             case '2':
@@ -104,6 +107,7 @@ int raw_file_scan(RawFile *raw_file, TokenArray *tokens) {
                 add_token(tokens, TT_NUMBER, raw_file->buf, start, c);
                 c--;
                 break;
+            */
         }
     }
 
@@ -128,6 +132,8 @@ int main(int argc, char *argv[]) {
         return -1;
     }
     raw_file_scan(raw_file, tokens);
+
+    printf("Tokens: %lu\n", tokens->count);
 
     for(size_t s = 0; s < tokens->count; s++) {
         TokenItem *token = &tokens->items[s];
